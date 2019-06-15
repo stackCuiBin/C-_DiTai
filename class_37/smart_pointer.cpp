@@ -88,6 +88,7 @@ int main(int argc, char** argv)
 
 	cout << p1.isNull() << endl;
 
+	//cout << p2.operator->()->value() << endl;
 	cout << p2->value() << endl;
 
     return 0;
