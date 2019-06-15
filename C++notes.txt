@@ -1039,7 +1039,72 @@ C到C++的升级
 	函数对象用于在工程中取代函数指针
 
 
+41，经典问题分析
+	关于赋值的疑问
+		编译器为每个类默认重载了赋值操作符
+		默认的赋值操作符仅完成浅拷贝
+		当需要进行深拷贝时必须重载赋值操作符
+		赋值操作符与拷贝构造函数有相同的存在意义
+	一般性原则
+		重载赋值操作符，必然需要实现深拷贝！！！
 
+	编译器默认提供的函数
+								class Test
+								{
+		class Test
+		{						public:
+					等价			Test();
+		};							Test(const Test&);
+									Test& operator = (const Test&);
+									~Test();
+								};
+	
+	关于string的疑问
+	(1)问题分析
+		s = "12345";			string m_cstr ---------> 12345
+												 	---^ 0xFF112233
+												 ---
+		p = s.c_str();			const char* p ---
+
+
+		s.append("abcd");		string m_cstr ---------> 12345abcd
+		(可能会改变地址)								 0xFF445566
+
+	string对象内部维护了一个指向数据的char*指针，这个指针可能在程序运行过程中发生改变
+
+	(2)问题分析
+		const char* p = "12345";
+		string s = "";
+		s.reserve(10);
+		for(int i = 0; i < 5; i++)
+		{
+			s[i] = p[i];
+		}
+		cout << s << endl;	// print NULL
+	for循环之前：
+		string
+		m_cstr ---------------> (10 bytes)
+		m_length=0				0xFF112233
+
+	for循环之后：
+		string
+		m_cstr ---------------> 12345+(5 bytes)
+		m_length=0				0xFF112233
+
+第36课小结
+	在需要进行深拷贝的时候必须重载赋值操作符
+	在赋值操作符和拷贝构造函数有同等重要的意义
+	string类通过一个数据空间保存字符数据
+	string类通过一个成员变量保存当前字符串的长度
+	C++开发时尽量避开C语言中惯用的编程思想
+
+
+		
+
+
+
+
+		
 
 
 
