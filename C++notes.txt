@@ -1576,3 +1576,81 @@ C到C++的升级
 	类中只存在纯虚函数的称为接口
 	接口是一种特殊的抽象类
 
+58，被遗弃的多重继承-上
+	C++中的多重继承
+		C++支持编写多重继承的代码
+			一个子类可以拥有多个父类
+			子类拥有所有父类的成员变量
+			子类继承所有父类的成员函数
+			子类对象可以当做任意父类对象使用
+		语法规则
+			class Derived : public BaseClassA,
+							public BaseClassB,
+							public BaseClassC
+			{
+			};
+		多重继承和单继承本质上是一样的
+
+	多重继承的问题一
+		通过多重继承得到的对象可能拥有“不同的地址”！！！
+		解决方案：无
+			Derived d(1, 2, 3);
+			BaseClassA* pa = &d;
+			BaseClassB* pb = &d;
+				pa--->	int ma;
+						int mb;  <----pb
+						int mc;
+
+	多重继承的问题二
+		当多重继承关系出现闭合时将产生数据冗余的问题！！！
+		解决方案：虚继承
+			class People {};
+			class Teacher : virtual public People {};
+			class Student : virtual public People {};
+			class Doctor : public Teacher, public Student
+			{};
+		虚继承能够解决数据冗余的问题
+		中间层父类不在关心顶层父类的初始化
+		最终子类必须直接调用顶层父类的构造函数
+		问题：
+			当架构设计中需要继承时，无法确定使用直接继承还是虚继承！！
+
+第53课小结
+	C++支持多重继承的变成方式
+	多重继承容易带来问题
+		可能出现“同一个对象的地址不同”的情况
+		虚继承可以解决数据冗余的问题
+		虚继承使得架构设计可能出现问题
+
+59, 被遗弃的多重继承－下
+	多重继承的问题三：
+		多重继承可能产生多个虚函数表
+			BaseA	   BaseB
+				Derived
+	  VTable A   vptr1
+				 vptr2  VTable B
+		需要进行强制类型转换时，C++中推荐使用新式类型转换关键字！！
+		解决方案：dynamic_cast
+			Derived d;
+			BaseA* pa = &d;
+			BaseB* pb = &d;
+			BaseB* pbb = (BaseB*)pa;
+				pa ---> vptr1; <--- pbb
+						vptr2; <--- pb
+
+	正确的使用多重继承
+		工程开发中的”多重继承“方式：
+			单继承某个类 + 实现(多个)接口
+
+	一些有用的建议
+		先继承自一个父类，然后实现多个接口
+		父类中提供equal()成员函数
+		equal()成员函数用于判断指针是否指向当前对象
+		与多继承相关的强制转换用dynamic_cast完成
+
+第５４课小结
+	多继承中可能出现多个虚函数表指针
+	与多重继承相关的强制转换用dynamic_cast完成
+	工程开发中采用“单继承多接口”的方式使用多继承
+	父类提供成员函数用于判断是否指向当前对象
+
