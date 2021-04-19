@@ -54,6 +54,9 @@ int main(int argc, char** argv)
 	s = TO_STRING(num);
 	cout << s << endl;
 
+	s = TO_STRING(0x123);
+	cout << s << endl;
+
     return 0;
 }
 
@@ -63,4 +66,5 @@ int main(int argc, char** argv)
  * 12
  * 54.32
  * 12
+ * 291
  */
